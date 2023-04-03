@@ -337,3 +337,42 @@ func (h *Handler) DeleteOrderItem(c *gin.Context) {
 
 	h.handlerResponse(c, "delete order", http.StatusNoContent, "Deleted succesfully")
 }
+
+
+
+
+
+// Get By ID OrderTotalSum godoc
+// @ID get_order_total_sum
+// @Router /order_item/totalSum [POST]
+// @Summary OrderTotalSum 
+// @Description Order Total Sum
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param ordertotalsum body models.OrdeerTotalSum true "DeleteOrderItemRequest"
+// @Success 200 {object} Response{data=string} "Success Request"
+// @Response 400 {object} Response{data=string} "Bad Request"
+// @Failure 500 {object} Response{data=string} "Server Error"
+func (h *Handler) OrdeerTotalSum(c *gin.Context) {
+	var (
+		req models.OrdeerTotalSum
+	)
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		h.handlerResponse(c, "storage.order.ordeertotalsumm", http.StatusBadRequest, err.Error())
+		return
+	}
+
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	sum, err := h.storages.Order().OrdeerTotalSum(ctx, &req)
+	if err != nil {
+		h.handlerResponse(c, "storage.order.ordeertotalsumm", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	h.handlerResponse(c, "get order by id", http.StatusCreated, sum)
+}

@@ -1995,6 +1995,89 @@ const docTemplate = `{
                 }
             }
         },
+        "/order_item/totalSum": {
+            "post": {
+                "description": "Order Total Sum",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "OrderTotalSum",
+                "operationId": "get_order_total_sum",
+                "parameters": [
+                    {
+                        "description": "DeleteOrderItemRequest",
+                        "name": "ordertotalsum",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.OrdeerTotalSum"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/order_item/{id}": {
             "delete": {
                 "description": "Delete Order Item",
@@ -4725,6 +4808,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.OrdeerTotalSum": {
+            "type": "object",
+            "properties": {
+                "order_id": {
+                    "type": "integer"
+                },
+                "promo_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.OrderItemPrimaryKey": {
             "type": "object",
             "properties": {
@@ -4791,7 +4885,7 @@ const docTemplate = `{
         "models.TransferStock": {
             "type": "object",
             "properties": {
-                "fromStock_id": {
+                "fromStore_id": {
                     "type": "integer"
                 },
                 "product_id": {
@@ -4800,7 +4894,7 @@ const docTemplate = `{
                 "quantity": {
                     "type": "integer"
                 },
-                "toStock_id": {
+                "toStore_id": {
                     "type": "integer"
                 }
             }

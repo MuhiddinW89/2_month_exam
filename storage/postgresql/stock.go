@@ -236,7 +236,7 @@ func (r *stockRepo) Transfer(ctx context.Context, req *models.TransferStock) err
 	query := `
 		SELECT quantity FROM stocks WHERE store_id = $1 AND product_id = $2
 	`
-	err = tx.QueryRow(ctx, query, req.FromStockID, req.ProductId).Scan(&sourceQuantity)
+	err = tx.QueryRow(ctx, query, req.FromStoreID, req.ProductId).Scan(&sourceQuantity)
 	if err != nil {
 		return err
 	}
@@ -248,7 +248,7 @@ func (r *stockRepo) Transfer(ctx context.Context, req *models.TransferStock) err
 	query = `
 		UPDATE stocks SET quantity = quantity - $1 WHERE store_id = $2 AND product_id = $3
 	`
-	_, err = tx.Exec(ctx, query, req.Quantity, req.FromStockID, req.ProductId)
+	_, err = tx.Exec(ctx, query, req.Quantity, req.FromStoreID, req.ProductId)
 	if err != nil {
 		return err
 	}
@@ -260,7 +260,7 @@ func (r *stockRepo) Transfer(ctx context.Context, req *models.TransferStock) err
 		ON CONFLICT (store_id, product_id)
 		DO UPDATE SET quantity = stocks.quantity + $3
 	`
-	_, err = tx.Exec(ctx, query, req.ToStockID, req.ProductId, req.Quantity)
+	_, err = tx.Exec(ctx, query, req.ToStoreID, req.ProductId, req.Quantity)
 	if err != nil {
 		return err
 	}

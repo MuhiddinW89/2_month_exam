@@ -474,3 +474,58 @@ func (r *orderRepo) RemoveOrderItem(ctx context.Context, req *models.OrderItemPr
 
 	return nil
 }
+
+
+func (r *orderRepo) OrdeerTotalSum(ctx context.Context, req *models.OrdeerTotalSum) (float64, error) {
+	
+	var (
+		query string
+		tSum float64
+		
+		promoData models.Promo_code
+	)
+
+	query = `
+	SELECT
+		SUM(quantity * list_price * discount)
+	FROM order_items
+	WHERE order_id = $1;
+	`
+	
+	if err := r.db.QueryRow(ctx, query, req.OrderId).Scan(
+		&tSum,
+	); err != nil {
+		return 0, err
+	}
+
+
+	query = `
+		SELECT * FROM promo_codes
+		WHERE promo_id = $1;
+	`
+	if err := r.db.QueryRow(ctx, query, req.Promo_id).Scan(
+		&promoData.Promo_id,
+		&promoData.Promo_name,
+		&promoData.Promo_discount,
+		&promoData.Promo_discount_type,
+		&promoData.Promo_order_limit_price,
+	); err != nil {
+		return 0, err
+	}
+
+	var sumPromo float64
+
+	if req.Promo_id == 0 {
+		return tSum, nil
+	}else if req.Promo_id > 0 {
+		if tSum >= promoData.Promo_order_limit_price && promoData.Promo_discount_type == "fixed" {
+			sumPromo = tSum - promoData.Promo_discount
+		}else if tSum >= promoData.Promo_order_limit_price && promoData.Promo_discount_type == "procent"{
+			sumPromo = tSum * (100 - promoData.Promo_discount)/100
+		}else{
+			return 0, errors.New("invalid Promo_id")
+		}	
+	}
+
+	return sumPromo, nil
+}

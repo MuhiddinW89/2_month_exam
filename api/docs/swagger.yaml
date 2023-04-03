@@ -154,6 +154,13 @@ definitions:
       customer_id:
         type: integer
     type: object
+  models.OrdeerTotalSum:
+    properties:
+      order_id:
+        type: integer
+      promo_id:
+        type: integer
+    type: object
   models.OrderItemPrimaryKey:
     properties:
       item_id:
@@ -196,13 +203,13 @@ definitions:
     type: object
   models.TransferStock:
     properties:
-      fromStock_id:
+      fromStore_id:
         type: integer
       product_id:
         type: integer
       quantity:
         type: integer
-      toStock_id:
+      toStore_id:
         type: integer
     type: object
   models.UpdateBrand:
@@ -1492,6 +1499,52 @@ paths:
                   type: string
               type: object
       summary: Delete Order Item
+      tags:
+      - Order
+  /order_item/totalSum:
+    post:
+      consumes:
+      - application/json
+      description: Order Total Sum
+      operationId: get_order_total_sum
+      parameters:
+      - description: DeleteOrderItemRequest
+        in: body
+        name: ordertotalsum
+        required: true
+        schema:
+          $ref: '#/definitions/models.OrdeerTotalSum'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: OrderTotalSum
       tags:
       - Order
   /product:

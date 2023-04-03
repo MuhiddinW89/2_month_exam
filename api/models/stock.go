@@ -55,7 +55,7 @@ type GetListStockResponse struct {
 
 type TransferStock struct {
 	ProductId int `json:"product_id"`
-	FromStockID int `json:"fromStock_id"`
-	ToStockID int `json:"toStock_id"`
+	FromStoreID int `json:"fromStore_id"`
+	ToStoreID int `json:"toStore_id"`
 	Quantity int `json:"quantity"`
 }

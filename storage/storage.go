@@ -89,6 +89,8 @@ type OrderRepoI interface {
 	Delete(ctx context.Context, req *models.OrderPrimaryKey) (int64, error)
 	AddOrderItem(ctx context.Context, req *models.CreateOrderItem) error
 	RemoveOrderItem(ctx context.Context, req *models.OrderItemPrimaryKey) error
+	OrdeerTotalSum(ctx context.Context, req *models.OrdeerTotalSum) (float64, error) 
+
 }
 
 type PromoRepoI interface {
