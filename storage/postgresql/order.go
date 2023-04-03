@@ -497,9 +497,14 @@ func (r *orderRepo) OrdeerTotalSum(ctx context.Context, req *models.OrdeerTotalS
 	); err != nil {
 		return 0, err
 	}
+	
+	var sumPromo float64
 
+	if req.Promo_id == 0 {
+		return tSum, nil
+	}else if req.Promo_id > 0 {
 
-	query = `
+		query = `
 		SELECT * FROM promo_codes
 		WHERE promo_id = $1;
 	`
@@ -513,11 +518,6 @@ func (r *orderRepo) OrdeerTotalSum(ctx context.Context, req *models.OrdeerTotalS
 		return 0, err
 	}
 
-	var sumPromo float64
-
-	if req.Promo_id == 0 {
-		return tSum, nil
-	}else if req.Promo_id > 0 {
 		if tSum >= promoData.Promo_order_limit_price && promoData.Promo_discount_type == "fixed" {
 			sumPromo = tSum - promoData.Promo_discount
 		}else if tSum >= promoData.Promo_order_limit_price && promoData.Promo_discount_type == "procent"{
